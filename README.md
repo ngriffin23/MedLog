@@ -1,4 +1,4 @@
-# MedLog on GitHub Pages
+# MedLog
 
 Put these files online for free so you and your friends can open MedLog from a link and add it to your iPhone Home Screen.
 
