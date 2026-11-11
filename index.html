@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>MedLog: track your medicines and symptoms</title>
+<meta name="description" content="A free, private app for tracking your medicines, doses and symptoms.">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" href="icon-192.png" type="image/png">
+<meta name="theme-color" content="#F2F6F8" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0E1A21" media="(prefers-color-scheme: dark)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="MedLog">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<script>if(navigator.standalone||matchMedia("(display-mode: standalone)").matches)location.replace("app.html")</script>
+<style>
+:root{--bg:#F2F6F8;--surf:#fff;--ink:#13232D;--mute:#4D5F6B;--line:#D5E0E6;--pri:#0B6B78;--pri-ink:#fff;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0E1A21;--surf:#16262F;--ink:#E8F1F5;--mute:#9DB1BD;--line:#2A3E49;--pri:#4FC3D1;--pri-ink:#06242A;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0E1A21;--surf:#16262F;--ink:#E8F1F5;--mute:#9DB1BD;--line:#2A3E49;--pri:#4FC3D1;--pri-ink:#06242A;color-scheme:dark}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 18px/1.55 "Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:600px;margin:0 auto;padding:40px 20px 56px}
+.hero{text-align:left}
+.hero svg{display:block;width:88px;height:88px;border-radius:22px;margin-bottom:24px}
+h1{font-size:44px;line-height:1.05;margin:0 0 12px;letter-spacing:-.02em}
+.lead{font-size:21px;margin:0 0 28px;color:var(--mute);max-width:30ch}
+.cta{display:inline-flex;align-items:center;justify-content:center;min-height:56px;padding:0 32px;border-radius:28px;background:var(--pri);color:var(--pri-ink);font-weight:700;font-size:19px;text-decoration:none}
+.free{margin:12px 0 0;font-size:15px;color:var(--mute)}
+h2{font-size:24px;margin:48px 0 12px}
+ul,ol{margin:0;padding-left:1.3em}
+li{margin-bottom:10px}
+li::marker{font-weight:700;color:var(--pri)}
+.step{background:var(--surf);border:1px solid var(--line);border-radius:16px;padding:16px 20px}
+.step ol{padding-left:1.4em}
+.step li:last-child{margin-bottom:0}
+.fine{font-size:15px;color:var(--mute)}
+a:not(.cta){color:var(--pri);font-weight:700}
+:focus-visible{outline:3px solid var(--pri);outline-offset:3px}
+footer{margin-top:48px;padding-top:20px;border-top:1px solid var(--line)}
+</style>
+</head>
+<body>
+<main>
+<section class="hero">
+<svg viewBox="0 0 120 120" role="img" aria-label="MedLog capsule icon"><rect width="120" height="120" fill="#0B6B78"/><g transform="rotate(-35 60 60)"><path d="M60 45H41a15 15 0 0 0 0 30H60z" fill="#fff"/><path d="M60 45H79a15 15 0 0 1 0 30H60z" fill="#7FD6E0"/></g></svg>
+<h1>MedLog</h1>
+<p class="lead">Keep track of your medicines, doses and symptoms in one place.</p>
+<a class="cta" href="app.html">Open MedLog</a>
+<p class="free">Free. No account or sign-up.</p>
+</section>
+
+<h2>What you can do</h2>
+<ul>
+<li>Tick off each dose as taken or skipped, and fix the time if it was different.</li>
+<li>Log symptoms and see which medicines you took in the hours before.</li>
+<li>Add a note to any dose, such as whether you took it with food.</li>
+<li>Look back over a day, a week or a month.</li>
+<li>Copy a summary to show your doctor.</li>
+</ul>
+
+<h2>Add it to your iPhone</h2>
+<div class="step">
+<ol>
+<li>Open this page in <strong>Safari</strong>.</li>
+<li>Tap the <strong>Share</strong> button at the bottom of the screen.</li>
+<li>Tap <strong>Add to Home Screen</strong>, then <strong>Add</strong>.</li>
+<li>From now on, open MedLog from its icon on your Home Screen.</li>
+</ol>
+</div>
+
+<h2>Your entries stay with you</h2>
+<p>Everything you enter is saved only on your own phone. There are no accounts, and nobody else can see your medicines or symptoms, including whoever shared this page with you.</p>
+<ul class="fine">
+<li>Use the Home Screen icon every time. The icon and Safari keep separate saved entries.</li>
+<li>Entries don’t move to a new phone, so you’d start fresh there.</li>
+<li>Reminders only work while MedLog is open. Set a phone alarm for any dose you can’t miss.</li>
+</ul>
+
+<footer>
+<p class="fine">MedLog is a tracking tool and doesn’t give medical advice. If a symptom feels serious or sudden, contact a doctor or emergency services.</p>
+</footer>
+</main>
+</body>
+</html>

@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" href="icon-192.png" type="image/png">
+<meta name="theme-color" content="#F2F6F8" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0E1A21" media="(prefers-color-scheme: dark)">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="MedLog">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>MedLog</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<style>
+:root{--bg:#F2F6F8;--surf:#fff;--ink:#13232D;--mute:#4D5F6B;--line:#D5E0E6;--ctl:#7C93A1;--pri:#0B6B78;--pri-ink:#fff;--ok:#1B7048;--warn:#8A5300;--warnbg:#FFF0D6;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0E1A21;--surf:#16262F;--ink:#E8F1F5;--mute:#9DB1BD;--line:#2A3E49;--ctl:#6A8493;--pri:#4FC3D1;--pri-ink:#06242A;--ok:#6FD3A0;--warn:#F2B24C;--warnbg:#3A2B10;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0E1A21;--surf:#16262F;--ink:#E8F1F5;--mute:#9DB1BD;--line:#2A3E49;--ctl:#6A8493;--pri:#4FC3D1;--pri-ink:#06242A;--ok:#6FD3A0;--warn:#F2B24C;--warnbg:#3A2B10;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 17px/1.5 "Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:560px;margin:0 auto;padding:24px 16px 190px}
+h1{font-size:30px;line-height:1.15;margin:0 0 4px;letter-spacing:-.01em}
+h2{font-size:20px;margin:28px 0 10px}
+.sub{margin:0 0 20px;color:var(--mute)}
+.dim{color:var(--mute)}
+button,input,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--pri);outline-offset:2px}
+.list{list-style:none;margin:0;padding:0;background:var(--surf);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.list>li{display:flex;gap:12px;align-items:center;justify-content:space-between;padding:14px 16px;min-height:72px;border-top:1px solid var(--line)}
+.list>li:first-child{border-top:0}
+.list .grow{min-width:0}
+.when{font-size:15px;color:var(--mute)}
+.late .when{color:var(--warn);font-weight:700}
+.taken .when{color:var(--ok)}
+.btn{min-height:48px;min-width:112px;padding:0 18px;border-radius:12px;border:2px solid var(--pri);background:var(--pri);color:var(--pri-ink);font-weight:700}
+.btn.ghost{background:transparent;color:var(--ink);border-color:var(--ctl)}
+.taken .btn{background:transparent;color:var(--ok);border-color:var(--ok)}
+.link{background:none;border:0;color:var(--pri);font-weight:700;min-height:44px;padding:0 8px;text-decoration:underline}
+.prog{height:12px;border-radius:6px;background:var(--line);overflow:hidden}
+.prog i{display:block;height:100%;background:var(--ok);border-radius:6px;transition:width .3s}
+.prog+p{margin:8px 0 0}
+.empty{background:var(--surf);border:1.5px dashed var(--ctl);border-radius:16px;padding:24px 20px;text-align:center}
+.empty p{margin:0 0 16px}
+.pill{display:inline-block;font-size:14px;font-weight:700;padding:2px 10px;border-radius:12px;background:var(--warnbg);color:var(--warn)}
+.dots{letter-spacing:2px}
+.note{margin:6px 0 0;font-size:15px}
+.fab{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(76px + env(safe-area-inset-bottom,0px));width:min(calc(100% - 32px),528px);height:56px;border-radius:28px;border:0;background:var(--pri);color:var(--pri-ink);font-weight:700;font-size:18px;box-shadow:0 6px 20px rgba(0,0,0,.25)}
+nav{position:fixed;left:0;right:0;bottom:0;background:var(--surf);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px);z-index:5}
+nav div{max-width:560px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr)}
+nav a{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:60px;color:var(--mute);text-decoration:none;font-size:13px;font-weight:700}
+nav a[aria-current="page"]{color:var(--pri)}
+nav svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+dialog{border:0;border-radius:20px;padding:20px;width:min(520px,calc(100% - 24px));max-height:90vh;background:var(--surf);color:var(--ink)}
+dialog::backdrop{background:rgba(10,20,26,.6)}
+dialog h2{margin:0 0 4px}
+label.f,legend{display:block;font-weight:700;margin:18px 0 6px;padding:0}
+fieldset{border:0;margin:0;padding:0;min-width:0}
+input[type=text],input[type=time],input[type=datetime-local],textarea{width:100%;min-height:48px;padding:10px 12px;border:1.5px solid var(--ctl);border-radius:10px;background:var(--bg)}
+textarea{min-height:76px;resize:vertical}
+.trow{display:flex;gap:8px;margin-bottom:8px}
+.trow button{min-width:48px;min-height:48px;border:1.5px solid var(--ctl);border-radius:10px;background:none;font-size:22px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.seg{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.chips label,.seg label{position:relative}
+.chips input,.seg input{position:absolute;opacity:0;inset:0;width:100%;height:100%;margin:0;cursor:pointer}
+.chips span{display:block;padding:10px 16px;min-height:44px;border:1.5px solid var(--ctl);border-radius:22px}
+.seg span{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:60px;border:1.5px solid var(--ctl);border-radius:10px;font-size:12px;text-align:center}
+.seg b{font-size:20px}
+input:checked+span{background:var(--pri);border-color:var(--pri);color:var(--pri-ink);font-weight:700}
+input:focus-visible+span{outline:3px solid var(--pri);outline-offset:2px}
+.acts{display:flex;gap:10px;justify-content:flex-end;margin-top:22px}
+.err{color:var(--warn);font-weight:700;margin:12px 0 0}
+#toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(142px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);padding:6px 8px 6px 16px;border-radius:12px;display:none;align-items:center;gap:8px;z-index:20;max-width:calc(100% - 32px)}
+#toast.on{display:flex}
+#toast button{background:none;border:0;color:var(--bg);font-weight:700;text-decoration:underline;min-height:44px;padding:0 10px}
+.bar{height:10px;border-radius:5px;background:var(--line);overflow:hidden;margin-top:6px}
+.bar i{display:block;height:100%;background:var(--ok)}
+.insight{background:var(--surf);border:1px solid var(--line);border-radius:16px;padding:14px 16px;margin-bottom:10px}
+.insight p{margin:0}
+#sum{font-size:14px;min-height:200px;margin-top:8px}
+.foot{font-size:14px;color:var(--mute);margin-top:28px}
+.dact{display:flex;flex-direction:column;gap:6px;align-items:stretch}
+.tabs{display:flex;background:var(--line);border-radius:12px;padding:4px;gap:4px;margin-bottom:14px}
+.tb{flex:1;min-height:44px;border:0;border-radius:9px;background:transparent;font-weight:700;color:var(--mute)}
+.tb[aria-pressed="true"]{background:var(--surf);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.pt{flex:1;display:flex;align-items:center;justify-content:center;text-align:center}
+.cal{gap:4px}.cal .stack{height:34px;border-radius:4px}.cal .sv{font-size:13px;margin-top:2px}.cal .dl{font-size:13px;color:var(--ink)}
+.fut{opacity:.35}
+.pill.n{background:var(--line);color:var(--ink)}
+.dnav{display:flex;gap:8px;margin-bottom:16px}
+.dnav input{flex:1;min-width:0;min-height:48px;padding:10px 12px;border:1.5px solid var(--ctl);border-radius:10px;background:var(--surf)}
+.dnav .btn{min-width:52px;padding:0;font-size:24px}
+.btn:disabled{opacity:.4;cursor:default}
+.dact .ghost{min-height:44px}
+.taken .dact .ghost{color:var(--ink);border-color:var(--ctl)}
+.chart{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-top:14px}
+.stack{height:120px;display:flex;flex-direction:column-reverse;background:var(--line);border-radius:6px;overflow:hidden}
+.stack i{display:block}
+.tk{background:var(--ok)}.sk{background:var(--warn)}
+.sv{display:block;text-align:center;font-weight:700;margin-top:6px}
+.dl{display:block;text-align:center;font-size:12px;line-height:1.3;color:var(--mute)}.dl b{color:var(--ink)}
+.lg{display:inline-block;width:12px;height:12px;border-radius:3px;background:var(--line);margin:0 4px -1px 8px}
+.lg.tk{background:var(--ok)}.lg.sk{background:var(--warn)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<main id="app"></main>
+<button class="fab" id="fab" data-act="fab"></button>
+<div id="toast" role="status" aria-live="polite"><span id="tmsg"></span><button id="tundo" type="button">Undo</button></div>
+<nav aria-label="Main"><div>
+<a href="#today"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l3 3 5-6"/></svg>Today</a>
+<a href="#medicines"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="9" width="18" height="6" rx="3" transform="rotate(-35 12 12)"/><path d="M9.5 8.5l5 7" transform="rotate(0 12 12)"/></svg>Medicines</a>
+<a href="#symptoms"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12h4l2-6 4 12 2-6h6"/></svg>Symptoms</a>
+<a href="#insights"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>Insights</a>
+</div></nav>
+<dialog id="dlg" aria-labelledby="dt"></dialog>
+<script>
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const KEY="medlog-v1";
+let S={meds:[],log:{},sx:[],skip:{},notified:{},rem:false};
+try{const r=localStorage.getItem(KEY);if(r)S=JSON.parse(r)}catch(e){}
+S.skip=S.skip||{};S.notified=S.notified||{};S.dn=S.dn||{};
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+const pad=n=>String(n).padStart(2,"0");
+const dk=d=>d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());
+const tf=ts=>new Date(ts).toLocaleTimeString([],{hour:"numeric",minute:"2-digit"});
+const hm=t=>{const[h,m]=t.split(":");return tf(new Date(2000,0,1,+h,+m))};
+const dfmt=(d,o)=>new Date(d).toLocaleDateString([],o||{weekday:"long",month:"long",day:"numeric"});
+const SEV=["","Barely","Mild","Moderate","Strong","Severe"];
+const dots=n=>"●".repeat(n)+"○".repeat(5-n);
+const TABS=["today","medicines","symptoms","insights"];
+let tab="today",tt,off=0,imode="week",ioff=0;const schedTs=k=>{const p=k.split("|");return new Date(p[0]+"T"+p[2]).getTime()};
+
+function toast(msg,undo){
+  $("#tmsg").textContent=msg;const u=$("#tundo");u.style.display=undo?"":"none";u.onclick=()=>{undo&&undo();$("#toast").classList.remove("on")};
+  $("#toast").classList.add("on");clearTimeout(tt);tt=setTimeout(()=>$("#toast").classList.remove("on"),6000);
+}
+function dosesFor(d){const k=dk(d),o=[];S.meds.forEach(m=>m.times.forEach(t=>o.push({m,t,key:k+"|"+m.id+"|"+t})));return o.sort((a,b)=>a.t.localeCompare(b.t))}
+function prior(ts){const o=[];for(const k in S.log){const id=k.split("|")[1],m=S.meds.find(x=>x.id===id),t=S.log[k];if(m&&t<=ts&&ts-t<=216e5)o.push({n:m.name,t})}return o.sort((a,b)=>a.t-b.t)}
+const priorTxt=ts=>{const p=prior(ts);return p.length?"After "+p.map(x=>esc(x.n)+" ("+tf(x.t)+")").join(", "):""};
+
+function sxItem(x){
+  const p=priorTxt(x.ts);
+  return `<li><div class="grow"><strong>${esc(x.name)}</strong> <span class="pill">${SEV[x.sev]}</span> <span class="dots" aria-hidden="true">${dots(x.sev)}</span>
+  <div class="when">${tf(x.ts)}${p?", "+p:""}</div>${x.note?`<p class="note">${esc(x.note)}</p>`:""}</div>
+  <div class="dact"><button class="link" data-act="editsx" data-id="${x.id}" aria-label="Edit ${esc(x.name)} entry">Edit</button><button class="link" data-act="delsx" data-id="${x.id}" aria-label="Delete ${esc(x.name)} entry">Delete</button></div></li>`;
+}
+
+const views={
+today(){
+  const now=new Date(),vd=new Date(now),ds=(vd.setDate(vd.getDate()-off),dosesFor(vd)),done=ds.filter(d=>S.log[d.key]).length,skp=ds.filter(d=>S.skip[d.key]).length,cur=off?"99:99":pad(now.getHours())+":"+pad(now.getMinutes());
+  let h=`<h1>${off?"Past day":"Today"}</h1><p class="sub">${dfmt(vd)}</p><div class="dnav"><button class="btn ghost" data-act="prev" aria-label="Previous day">‹</button><input type="date" id="jd" value="${dk(vd)}" max="${dk(now)}" aria-label="Jump to a date"><button class="btn ghost" data-act="next" aria-label="Next day"${off?"":" disabled"}>›</button></div>${off?`<p style="margin:-6px 0 12px"><button class="link" data-act="today" style="padding-left:0">Back to today</button></p><p class="dim" style="margin:0 0 12px">Filling in a past day? Mark taken records the dose at its scheduled time.</p>`:(S.meds.length?remCtl():"")}`;
+  if(!ds.length) h+=`<div class="empty"><p>No medicines yet. Add what you take and when, and today’s doses will show up here.</p><button class="btn" data-act="addmed">Add your first medicine</button></div>`;
+  else{
+    const pct=Math.round(done/ds.length*100);
+    h+=`<div class="prog" role="progressbar" aria-label="Doses taken today" aria-valuemin="0" aria-valuemax="${ds.length}" aria-valuenow="${done}"><i style="width:${pct}%"></i></div>
+    <p><strong>${done} of ${ds.length}</strong> doses taken${skp?", "+skp+" skipped":""}${done+skp===ds.length?". All done.":""}</p><h2>Doses</h2><ul class="list">`;
+    ds.forEach(d=>{
+      const t=S.log[d.key],sk=S.skip[d.key],late=!t&&!sk&&d.t<cur;
+      h+=`<li class="${t?"taken":sk?"skipped":late?"late":""}"><div class="grow"><strong>${esc(d.m.name)}</strong> <span class="dim">${esc(d.m.dose||"")}</span>
+      <div class="when">${t?"Taken at "+tf(t):sk?"Skipped at "+tf(sk):(late?(off?"Not logged, due at ":"Overdue since "):"Due at ")+hm(d.t)}${d.m.notes?", "+esc(d.m.notes):""}</div>${dnHtml(d)}</div>
+      <div class="dact">${sk?`<button class="btn ghost" data-act="unskip" data-key="${d.key}" aria-label="Undo skip for ${esc(d.m.name)}">Undo skip</button>`:`<button class="btn" data-act="toggle" data-key="${d.key}" aria-pressed="${!!t}" aria-label="${esc(d.m.name)} at ${hm(d.t)}">${t?"✓ Taken":"Mark taken"}</button>`+(t?`<button class="btn ghost" data-act="edit" data-key="${d.key}" aria-label="Edit time taken for ${esc(d.m.name)}">Edit time</button>`:`<button class="btn ghost" data-act="skip" data-key="${d.key}" aria-label="Skip ${esc(d.m.name)} at ${hm(d.t)}">Skip</button>`)}</div></li>`;
+    });
+    h+=`</ul>`;
+  }
+  const td=S.sx.filter(x=>dk(new Date(x.ts))===dk(vd)).sort((a,b)=>b.ts-a.ts);
+  h+=`<h2>Symptoms ${off?"on this day":"today"}</h2>`+(td.length?`<ul class="list">${td.map(sxItem).join("")}</ul>`:`<p class="dim">Nothing logged. Feeling something new? Tap “Log symptom”.</p>`);
+  return h;
+},
+medicines(){
+  let h=`<h1>Medicines</h1><p class="sub">What you take and when.</p>`;
+  if(!S.meds.length) return h+`<div class="empty"><p>Nothing here yet. Add a medicine with its dose and the times you take it.</p></div>`;
+  h+=`<ul class="list">`;
+  S.meds.forEach(m=>{h+=`<li><div class="grow"><strong>${esc(m.name)}</strong> <span class="dim">${esc(m.dose||"")}</span>
+  <div class="when">${m.times.map(hm).join(", ")}${m.notes?", "+esc(m.notes):""}</div></div>
+  <div class="dact"><button class="link" data-act="editmed" data-id="${m.id}" aria-label="Edit ${esc(m.name)}">Edit</button><button class="link" data-act="delmed" data-id="${m.id}" aria-label="Remove ${esc(m.name)}">Remove</button></div></li>`});
+  return h+`</ul>`;
+},
+symptoms(){
+  let h=`<h1>Symptoms</h1><p class="sub">Each entry shows which medicines you took in the 6 hours before.</p>`;
+  if(!S.sx.length) return h+`<div class="empty"><p>No symptoms logged. Log anything that feels off, even if it seems small.</p></div>`;
+  const g={};[...S.sx].sort((a,b)=>b.ts-a.ts).forEach(x=>{(g[dk(new Date(x.ts))]=g[dk(new Date(x.ts))]||[]).push(x)});
+  for(const k in g) h+=`<h2>${dfmt(g[k][0].ts,{weekday:"long",month:"short",day:"numeric"})}</h2><ul class="list">${g[k].map(sxItem).join("")}</ul>`;
+  return h;
+},
+insights(){
+  let h=`<h1>Insights</h1>`;
+  const sched=S.meds.reduce((a,m)=>a+m.times.length,0);
+  if(!S.meds.length&&!S.sx.length) return h+`<div class="empty"><p>Add medicines and log a few days to see patterns here.</p></div>`;
+  const today=dk(new Date()),back=n=>{const d=new Date();d.setHours(12,0,0,0);d.setDate(d.getDate()-n);return d};
+  const stat=d=>{const k=dk(d);let tk=0,sk=0;S.meds.forEach(m=>m.times.forEach(t=>{const q=k+"|"+m.id+"|"+t;if(S.log[q])tk++;else if(S.skip[q])sk++}));const sx=S.sx.filter(x=>dk(new Date(x.ts))===k);return{d,tk,sk,sx,worst:Math.max(0,...sx.map(x=>x.sev))}};
+  const col=(s,lbl)=>{const fut=dk(s.d)>today;return `<div class="col${fut?" fut":""}" role="img" aria-label="${dfmt(s.d,{weekday:"long",month:"long",day:"numeric"})}: ${fut?"no data yet":s.tk+" of "+sched+" doses taken, "+s.sk+" skipped, "+(s.sx.length?"worst symptom "+SEV[s.worst].toLowerCase():"no symptoms")}"><div class="stack"><i class="tk" style="height:${sched?s.tk/sched*100:0}%"></i><i class="sk" style="height:${sched?s.sk/sched*100:0}%"></i></div><span class="sv">${fut?"":s.worst||"–"}</span><span class="dl">${lbl}</span></div>`};
+  let days,title;
+  if(imode==="day"){days=[back(ioff)];title=dfmt(days[0],{weekday:"long",month:"long",day:"numeric"})}
+  else if(imode==="week"){days=[...Array(7)].map((_,i)=>back(ioff*7+6-i));title=dfmt(days[0],{month:"short",day:"numeric"})+" to "+dfmt(days[6],{month:"short",day:"numeric"})}
+  else{const f=new Date();f.setHours(12,0,0,0);f.setDate(1);f.setMonth(f.getMonth()-ioff);const n=new Date(f.getFullYear(),f.getMonth()+1,0).getDate();days=[...Array(n)].map((_,i)=>new Date(f.getFullYear(),f.getMonth(),i+1,12));title=dfmt(f,{month:"long",year:"numeric"})}
+  h+=`<div class="tabs" role="group" aria-label="Time range">${[["day","Daily"],["week","Weekly"],["month","Monthly"]].map(m=>`<button class="tb" data-act="imode" data-m="${m[0]}" aria-pressed="${imode===m[0]}">${m[1]}</button>`).join("")}</div>
+  <div class="dnav"><button class="btn ghost" data-act="iprev" aria-label="Earlier">‹</button><div class="pt"><strong>${title}</strong></div><button class="btn ghost" data-act="inext" aria-label="Later"${ioff?"":" disabled"}>›</button></div>`;
+  const all=days.map(stat),st=all.filter(s=>dk(s.d)<=today);
+  if(imode==="day"){
+    const d=days[0],s=all[0],now=new Date(),cur=pad(now.getHours())+":"+pad(now.getMinutes());
+    h+=`<h2>Doses</h2>`+(S.meds.length?`<ul class="list">${dosesFor(d).map(x=>{const t=S.log[x.key],sk=S.skip[x.key],n=S.dn[x.key];return `<li><div class="grow"><strong>${esc(x.m.name)}</strong> <span class="dim">${esc(x.m.dose||"")}</span><div class="when">${t?"Taken at "+tf(t):sk?"Skipped":(ioff===0&&x.t>cur?"Not due yet":"Not logged")}, due ${hm(x.t)}</div>${n?`<p class="note">${n.food?`<span class="pill n">${n.food==="with"?"With food":"Without food"}</span> `:""}${esc(n.text||"")}</p>`:""}</div></li>`}).join("")}</ul>`:`<p class="dim">No medicines added.</p>`)
+    +`<h2>Symptoms</h2>`+(s.sx.length?`<ul class="list">${[...s.sx].sort((a,b)=>a.ts-b.ts).map(sxItem).join("")}</ul>`:`<p class="dim">No symptoms logged this day.</p>`);
+  }else{
+    const tk=st.reduce((a,s)=>a+s.tk,0),sk=st.reduce((a,s)=>a+s.sk,0),tot=sched*st.length,nsx=st.reduce((a,s)=>a+s.sx.length,0),w=Math.max(0,...st.map(s=>s.worst));
+    h+=`<div class="insight"><p><strong>${tot?Math.round(tk/tot*100):0}%</strong> of doses taken (${tk} of ${tot}). ${sk} skipped, ${Math.max(0,tot-tk-sk)} missed.</p><p style="margin-top:6px">${nsx?nsx+" symptom"+(nsx>1?"s":"")+" logged, worst: "+SEV[w].toLowerCase():"No symptoms logged"}.</p></div>`;
+    const body=imode==="week"?all.map(s=>col(s,`<b>${dfmt(s.d,{weekday:"short"})}</b><br>${dfmt(s.d,{month:"short",day:"numeric"})}`)).join(""):["S","M","T","W","T","F","S"].map(x=>`<span class="dl" aria-hidden="true">${x}</span>`).join("")+"<div></div>".repeat(days[0].getDay())+all.map(s=>col(s,s.d.getDate())).join("");
+    h+=`<div class="insight"><strong>Doses and symptoms</strong><div class="chart${imode==="month"?" cal":""}">${body}</div>
+    <p class="when" style="margin-top:10px"><span class="lg tk"></span>Taken <span class="lg sk"></span>Skipped <span class="lg"></span>Missed. The number is your worst symptom that day, from 1 to 5. A dash means none.</p></div>`;
+  }
+  const c={};S.sx.forEach(x=>{const o=c[x.name]=c[x.name]||{n:0,m:{}};o.n++;prior(x.ts).forEach(p=>{o.m[p.n]=(o.m[p.n]||0)+1})});
+  const ins=Object.entries(c).filter(([,o])=>o.n>=2).map(([n,o])=>{const t=Object.entries(o.m).sort((a,b)=>b[1]-a[1])[0];return t&&t[1]>=2?`<div class="insight"><p><strong>${esc(n)}</strong> was logged ${o.n} times. ${t[1]} of those came within 6 hours of ${esc(t[0])}. This may be a coincidence, so mention it to your doctor or pharmacist.</p></div>`:""}).join("");
+  if(ins) h+=`<h2>Possible patterns</h2>`+ins;
+  h+=`<h2>Share with your doctor</h2><p class="dim" style="margin:0">A plain-text summary of the last 14 days.</p><textarea id="sum" readonly aria-label="Summary">${esc(summary())}</textarea>
+  <div class="acts"><button class="btn" data-act="copy">Copy summary</button></div>
+  <p class="foot">MedLog stores your entries only in this browser on this device. It doesn’t give medical advice. If a symptom feels serious or sudden, contact a doctor or emergency services.</p>`;
+  return h;
+}};
+
+function summary(){
+  let tk=0,sk=0,sc=0,L=["MedLog summary, last 14 days (as of "+dfmt(new Date(),{month:"short",day:"numeric",year:"numeric"})+")","","Medicines:"];
+  S.meds.forEach(m=>L.push("- "+m.name+(m.dose?" "+m.dose:"")+" at "+m.times.map(hm).join(", ")+(m.notes?" ("+m.notes+")":"")));
+  if(!S.meds.length)L.push("- None added");
+  for(let i=0;i<14;i++){const d=new Date();d.setDate(d.getDate()-i);const k=dk(d);S.meds.forEach(m=>m.times.forEach(t=>{sc++;const q=k+"|"+m.id+"|"+t;if(S.log[q])tk++;else if(S.skip[q])sk++}))}
+  L.push("","Doses taken: "+tk+" of "+sc+(sc?" ("+Math.round(tk/sc*100)+"%)":"")+(sk?", skipped: "+sk:""),"","Symptoms:");
+  const cut=Date.now()-12096e5,xs=S.sx.filter(x=>x.ts>=cut).sort((a,b)=>a.ts-b.ts);
+  xs.forEach(x=>{const p=prior(x.ts).map(y=>y.n+" at "+tf(y.t)).join(", ");L.push("- "+dfmt(x.ts,{month:"short",day:"numeric"})+", "+tf(x.ts)+": "+x.name+", severity "+x.sev+" of 5 ("+SEV[x.sev].toLowerCase()+")"+(x.note?". "+x.note:"")+(p?". Medicines in the 6 hours before: "+p:""))});
+  if(!xs.length)L.push("- None logged");
+  const dn=Object.keys(S.dn).filter(q=>q.split("|")[0]>=dk(new Date(cut))).sort();
+  if(dn.length){L.push("","Dose notes:");dn.forEach(q=>{const p=q.split("|"),m=S.meds.find(x=>x.id===p[1]),n=S.dn[q];L.push("- "+dfmt(p[0]+"T00:00",{month:"short",day:"numeric"})+", "+(m?m.name:"Medicine")+" at "+hm(p[2])+": "+[n.food==="with"?"with food":n.food==="without"?"without food":"",n.text].filter(Boolean).join(". "))})}
+  return L.join("\n");
+}
+
+function render(){
+  const h=(location.hash||"#today").slice(1);tab=TABS.includes(h)?h:"today";
+  $("#app").innerHTML=views[tab]();
+  document.querySelectorAll("nav a").forEach(a=>a.getAttribute("href")==="#"+tab?a.setAttribute("aria-current","page"):a.removeAttribute("aria-current"));
+  $("#fab").textContent=tab==="medicines"?"+ Add medicine":"+ Log symptom";
+  document.title="MedLog: "+tab[0].toUpperCase()+tab.slice(1);
+}
+addEventListener("hashchange",()=>{render();scrollTo(0,0)});
+
+const dlg=$("#dlg");
+const close=`<button type="button" class="btn ghost" data-act="close">Cancel</button>`;
+function timeRow(v){return `<div class="trow"><input type="time" value="${v}" required aria-label="Time"><button type="button" data-act="rmtime" aria-label="Remove this time">×</button></div>`}
+function openMed(id){
+  const e=S.meds.find(m=>m.id===id)||null;dlg.dataset.form="med";dlg.dataset.id=e?e.id:"";
+  dlg.innerHTML=`<form><h2 id="dt">${e?"Edit medicine":"Add a medicine"}</h2>
+  <label class="f" for="mn">Medicine name</label><input id="mn" type="text" required autocomplete="off" placeholder="e.g. Metformin" value="${e?esc(e.name):""}">
+  <label class="f" for="md">Dose <span class="dim">(optional)</span></label><input id="md" type="text" autocomplete="off" placeholder="e.g. 500 mg" value="${e?esc(e.dose||""):""}">
+  <fieldset><legend>What time do you take it?</legend><div id="times">${(e?e.times:["08:00"]).map(t=>timeRow(t)).join("")}</div><button type="button" class="link" data-act="addtime" style="padding-left:0">+ Add another time</button></fieldset>
+  <label class="f" for="mo">Notes <span class="dim">(optional)</span></label><input id="mo" type="text" autocomplete="off" placeholder="e.g. with food" value="${e?esc(e.notes||""):""}">
+  <div class="acts">${close}<button class="btn">${e?"Save changes":"Save medicine"}</button></div></form>`;
+  dlg.showModal();
+}
+function dnHtml(d){const n=S.dn[d.key];return (n?`<p class="note">${n.food?`<span class="pill n">${n.food==="with"?"With food":"Without food"}</span> `:""}${esc(n.text||"")}</p>`:"")+`<button class="link" data-act="dnote" data-key="${d.key}" style="padding-left:0" aria-label="${n?"Edit":"Add"} note for ${esc(d.m.name)}">${n?"Edit note":"Add note"}</button>`}
+function openDn(k){
+  dlg.dataset.form="dn";dlg.dataset.key=k;
+  const p=k.split("|"),m=S.meds.find(x=>x.id===p[1]),n=S.dn[k]||{food:"",text:""};
+  const opts=[["with","With food"],["without","Without food"],["","Not noted"]];
+  dlg.innerHTML=`<form><h2 id="dt">Note for this dose</h2><p class="dim" style="margin:0">${esc(m?m.name:"Dose")}, ${dfmt(p[0]+"T00:00",{weekday:"long",month:"short",day:"numeric"})} at ${hm(p[2])}</p>
+  <fieldset><legend>Taken with food?</legend><div class="chips">${opts.map(o=>`<label><input type="radio" name="fd" value="${o[0]}"${n.food===o[0]?" checked":""}><span>${o[1]}</span></label>`).join("")}</div></fieldset>
+  <label class="f" for="dnt">Anything else? <span class="dim">(optional)</span></label><textarea id="dnt" placeholder="e.g. skipped breakfast, felt queasy after">${esc(n.text||"")}</textarea>
+  <div class="acts">${close}<button class="btn">Save note</button></div></form>`;
+  dlg.showModal();
+}
+function openTime(k){
+  dlg.dataset.form="time";dlg.dataset.key=k;
+  const p=k.split("|"),m=S.meds.find(x=>x.id===p[1]),d=new Date(S.log[k]),n=new Date();
+  const v=dk(d)+"T"+pad(d.getHours())+":"+pad(d.getMinutes()),mx=dk(n)+"T"+pad(n.getHours())+":"+pad(n.getMinutes());
+  dlg.innerHTML=`<form><h2 id="dt">When did you take it?</h2><p class="dim" style="margin:0">${esc(m?m.name:"Dose")}, scheduled for ${hm(p[2])}</p>
+  <label class="f" for="tk2">Time taken</label><input id="tk2" type="datetime-local" value="${v}" max="${mx}" required>
+  <div class="acts">${close}<button class="btn">Save time</button></div></form>`;
+  dlg.showModal();
+}
+function openSx(id){
+  const e=S.sx.find(x=>x.id===id)||null;dlg.dataset.form="sx";dlg.dataset.id=e?e.id:"";
+  const n=new Date(),mx=dk(n)+"T"+pad(n.getHours())+":"+pad(n.getMinutes()),v=new Date(),bk=tab==="today"&&off>0;v.setDate(v.getDate()-(bk?off:0));const eg=e&&new Date(e.ts),now=e?dk(eg)+"T"+pad(eg.getHours())+":"+pad(eg.getMinutes()):bk?dk(v)+"T12:00":mx;
+  const names=["Headache","Nausea","Dizziness","Tiredness","Stomach pain","Rash","Dry mouth","Trouble sleeping"];
+  dlg.innerHTML=`<form><h2 id="dt">${e?"Edit symptom":"Log a symptom"}</h2>
+  <fieldset><legend>What are you feeling?</legend><div class="chips">${names.map(x=>`<label><input type="radio" name="sn" value="${x}"${e&&e.name===x?" checked":""}><span>${x}</span></label>`).join("")}</div></fieldset>
+  <label class="f" for="so">Something else? <span class="dim">(optional)</span></label><input id="so" type="text" autocomplete="off" placeholder="Describe it in a few words" value="${e&&!names.includes(e.name)?esc(e.name):""}">
+  <fieldset><legend>How strong is it?</legend><div class="seg">${[1,2,3,4,5].map(i=>`<label><input type="radio" name="sv" value="${i}"${e&&e.sev===i?" checked":""} required><span><b>${i}</b>${SEV[i]}</span></label>`).join("")}</div></fieldset>
+  <label class="f" for="st">When did it start?</label><input id="st" type="datetime-local" value="${now}" max="${mx}" required>
+  <label class="f" for="sno">Notes <span class="dim">(optional)</span></label><textarea id="sno" placeholder="Anything that might help, like what you ate or did">${e?esc(e.note||""):""}</textarea>
+  <p class="err" id="err" role="alert"></p>
+  <div class="acts">${close}<button class="btn">${e?"Save changes":"Save symptom"}</button></div></form>`;
+  dlg.showModal();
+}
+
+dlg.addEventListener("submit",e=>{
+  e.preventDefault();
+  if(dlg.dataset.form==="dn"){const k=dlg.dataset.key,fd=dlg.querySelector("[name=fd]:checked").value,tx=$("#dnt").value.trim(),old=S.dn[k];if(fd||tx)S.dn[k]={food:fd,text:tx};else delete S.dn[k];save();dlg.close();render();toast("Note saved",()=>{if(old)S.dn[k]=old;else delete S.dn[k];save();render()});return}
+  if(dlg.dataset.form==="time"){const k=dlg.dataset.key,old=S.log[k],v=new Date($("#tk2").value).getTime();if(!v)return;S.log[k]=v;save();dlg.close();render();toast("Time updated",()=>{S.log[k]=old;save();render()});return}
+  if(dlg.dataset.form==="med"){
+    const times=[...new Set([...dlg.querySelectorAll("#times input")].map(i=>i.value).filter(Boolean))].sort();
+    if(!times.length)return;
+    const f={name:$("#mn").value.trim(),dose:$("#md").value.trim(),times,notes:$("#mo").value.trim()};
+    if(dlg.dataset.id){
+      const m=S.meds.find(x=>x.id===dlg.dataset.id),mv=[];
+      if(m.times.length===times.length)m.times.forEach((o,i)=>{if(o!==times[i])for(const st of [S.log,S.skip,S.dn])Object.keys(st).forEach(q=>{const p=q.split("|");if(p[1]===m.id&&p[2]===o)mv.push([st,q,p[0]+"|"+m.id+"|"+times[i],st[q]])})});
+      mv.forEach(x=>delete x[0][x[1]]);mv.forEach(x=>{x[0][x[2]]=x[3]});
+      Object.assign(m,f);save();dlg.close();render();toast("Medicine updated");return;
+    }
+    S.meds.push({id:Math.random().toString(36).slice(2,8),...f});
+    save();dlg.close();render();toast("Medicine saved");
+  }else{
+    const sel=dlg.querySelector("[name=sn]:checked"),other=$("#so").value.trim(),name=other||(sel&&sel.value);
+    if(!name){$("#err").textContent="Pick a symptom above, or describe it in your own words.";return}
+    const f={ts:new Date($("#st").value).getTime()||Date.now(),name,sev:+dlg.querySelector("[name=sv]:checked").value,note:$("#sno").value.trim()};
+    if(dlg.dataset.id){Object.assign(S.sx.find(x=>x.id===dlg.dataset.id),f);save();dlg.close();render();toast("Symptom updated");return}
+    S.sx.push({id:Math.random().toString(36).slice(2,8),...f});
+    save();dlg.close();render();toast("Symptom logged");
+  }
+});
+dlg.addEventListener("click",e=>{if(e.target===dlg)dlg.close()});
+
+document.addEventListener("click",async e=>{
+  const b=e.target.closest("[data-act]");if(!b)return;const a=b.dataset.act;
+  if(a==="fab")return tab==="medicines"?openMed():openSx();
+  if(a==="addmed")return openMed();
+  if(a==="close")return dlg.close();
+  if(a==="addtime"){$("#times").insertAdjacentHTML("beforeend",timeRow("20:00"));return}
+  if(a==="rmtime"){if(dlg.querySelectorAll(".trow").length>1)b.parentElement.remove();return}
+  if(a==="skip"||a==="unskip"){const k=b.dataset.key;if(a==="skip")S.skip[k]=off?schedTs(k):Date.now();else delete S.skip[k];save();render();toast(a==="skip"?"Dose skipped":"Skip undone",()=>{if(a==="skip")delete S.skip[k];else S.skip[k]=off?schedTs(k):Date.now();save();render()});return}
+  if(a==="imode"){imode=b.dataset.m;ioff=0;render();return}
+  if(a==="iprev"){ioff++;render();return}
+  if(a==="inext"){ioff=Math.max(0,ioff-1);render();return}
+  if(a==="dnote")return openDn(b.dataset.key);
+  if(a==="editmed")return openMed(b.dataset.id);
+  if(a==="editsx")return openSx(b.dataset.id);
+  if(a==="edit")return openTime(b.dataset.key);
+  if(a==="prev"){off++;render();return}
+  if(a==="next"){off=Math.max(0,off-1);render();return}
+  if(a==="today"){off=0;render();return}
+  if(a==="rem")return enableRem();
+  if(a==="remoff"){S.rem=false;save();render();toast("Reminders turned off");return}
+  if(a==="toggle"){
+    const k=b.dataset.key,had=S.log[k];
+    if(had)delete S.log[k];else S.log[k]=off?schedTs(k):Date.now();
+    save();render();
+    toast(had?"Dose unmarked":"Marked as taken",()=>{if(had)S.log[k]=had;else delete S.log[k];save();render()});return;
+  }
+  if(a==="delmed"){const i=S.meds.findIndex(m=>m.id===b.dataset.id),m=S.meds[i];S.meds.splice(i,1);save();render();toast(m.name+" removed",()=>{S.meds.splice(i,0,m);save();render()});return}
+  if(a==="delsx"){const i=S.sx.findIndex(x=>x.id===b.dataset.id),x=S.sx[i];S.sx.splice(i,1);save();render();toast("Entry deleted",()=>{S.sx.splice(i,0,x);save();render()});return}
+  if(a==="copy"){const ta=$("#sum");try{await navigator.clipboard.writeText(ta.value);toast("Summary copied")}catch(err){ta.focus();ta.select();toast("Select the text and copy it")}}
+});
+function remCtl(){return S.rem?`<p class="dim" style="margin:-8px 0 16px">Reminders are on while MedLog is open. <button class="link" data-act="remoff">Turn off</button></p>`:`<p style="margin:-8px 0 16px"><button class="link" data-act="rem" style="padding-left:0">Turn on dose reminders</button></p>`}
+async function enableRem(){
+  S.rem=true;save();let g=false;
+  try{if("Notification" in window){g=Notification.permission==="granted"||(Notification.permission!=="denied"&&await Notification.requestPermission()==="granted")}}catch(e){}
+  render();
+  toast(g?"Reminders on. Keep MedLog open in a tab to get them.":"Reminders on inside the app. Allow notifications in your browser for pop-ups.");
+  tick();
+}
+function tick(){
+  if(!S.rem)return;
+  const n=new Date(),k=dk(n),cur=n.getHours()*60+n.getMinutes();let fired=false;
+  for(const q in S.notified)if(!q.startsWith(k))delete S.notified[q];
+  dosesFor(n).forEach(d=>{
+    const p=d.t.split(":"),due=+p[0]*60+ +p[1];
+    if(due<=cur&&cur-due<=120&&!S.log[d.key]&&!S.skip[d.key]&&!S.notified[d.key]){
+      S.notified[d.key]=1;fired=true;
+      try{if("Notification" in window&&Notification.permission==="granted")new Notification("Time for "+d.m.name,{body:(d.m.dose?d.m.dose+", ":"")+"due at "+hm(d.t)})}catch(e){}
+      toast("Time for "+d.m.name+" ("+hm(d.t)+")");
+    }
+  });
+  if(fired){save();if(tab==="today")render()}
+}
+document.addEventListener("change",e=>{if(e.target.id==="jd"&&e.target.value){const t=new Date(e.target.value+"T00:00"),n=new Date();n.setHours(0,0,0,0);off=Math.max(0,Math.round((n-t)/864e5));render()}});
+setInterval(tick,20000);
+render();tick();
+if("serviceWorker" in navigator)addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
+</script>
+</body>
+</html>
