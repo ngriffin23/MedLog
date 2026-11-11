@@ -2,7 +2,7 @@
   "name": "MedLog",
   "short_name": "MedLog",
   "description": "Track your medicines, doses and symptoms.",
-  "start_url": "app.html",
+  "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "background_color": "#F2F6F8",
