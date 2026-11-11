@@ -2,22 +2,6 @@
 
 Put these files online for free so you and your friends can open MedLog from a link and add it to your iPhone Home Screen.
 
-## What's in this folder
-
-- `index.html` is the home page people see first, with an **Open MedLog** button and Home Screen steps
-- `app.html` is the app itself
-- `manifest.webmanifest` gives it a name, colors and Home Screen settings
-- `sw.js` lets it open without internet
-- `icon-192.png`, `icon-512.png`, `apple-touch-icon.png` are the app icons
-
-## Put it online (about 5 minutes)
-
-1. Make a free account at github.com if you don't have one.
-2. Tap **+** (top right), then **New repository**. Name it `medlog`, choose **Public**, then **Create repository**. On a free account, GitHub Pages needs a public repository. That's fine here, because the repository holds only the app itself and never anyone's entries.
-3. On the new repository page, choose **uploading an existing file**. Drag in all seven files from this folder (not the folder itself, and unzip first if you have the .zip), then choose **Commit changes**.
-4. Open **Settings**, then **Pages**. Under **Build and deployment**, set **Source** to **Deploy from a branch**, pick the **main** branch and the **/ (root)** folder, then **Save**.
-5. Wait a minute or two and refresh. The page shows your link, which opens the home page and looks like `https://YOUR-USERNAME.github.io/medlog/`.
-
 ## Install it on an iPhone
 
 1. Open your link in **Safari** (it has to be Safari).
