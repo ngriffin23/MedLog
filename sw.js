@@ -1,5 +1,5 @@
 // Bump this version whenever you replace index.html so phones pick up the update.
-const CACHE = "medlog-v3";
+const CACHE = "medlog-v4";
 const FILES = ["./", "./index.html", "./app.html", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png", "./apple-touch-icon.png"];
 
 self.addEventListener("install", e => {
@@ -21,6 +21,17 @@ self.addEventListener("fetch", e => {
   const url = new URL(req.url);
   const ok = url.origin === location.origin || /(^|\.)fonts\.(googleapis|gstatic)\.com$/.test(url.hostname);
   if (!ok) return;
+  // Pages load from the network first, so updates show up right away. The saved copy is used when offline.
+  if (req.mode === "navigate") {
+    e.respondWith(
+      fetch(req).then(res => {
+        const copy = res.clone();
+        caches.open(CACHE).then(c => c.put(req, copy));
+        return res;
+      }).catch(() => caches.match(req, { ignoreSearch: true }).then(hit => hit || caches.match("./index.html")))
+    );
+    return;
+  }
   e.respondWith(
     caches.open(CACHE).then(cache =>
       cache.match(req, { ignoreSearch: true }).then(hit => {
